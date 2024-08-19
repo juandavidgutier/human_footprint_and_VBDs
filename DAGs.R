@@ -1,3 +1,12 @@
+###############################################################################
+# Code for the paper:
+#   "Anthropogenic Landscapes and Vector-Borne Disease Dynamics: Unveiling the Comple
+#    Interplay between Human Footprint and Disease Transmission in Colombia?" Gutiérrez, Quintero-García, Xiao, Cuadros
+#    Last modification = 19/08/2024
+#    e-mail = juandavidgutier@gmail.com, jdgutierrez@udes.edu.co
+###############################################################################
+
+
 library(ggdag)
 library(dagitty)
 library(lavaan)
@@ -7,9 +16,9 @@ library(GGally)
 library(tidyr)
 library(MKdescr)
 
-
-
-data <- read.csv("D:/clases/UDES/artículo huella humana/data_malaria/malaria_final.csv")
+################################################################################
+# For malaria
+data <- read.csv("D:/malaria_final.csv") # Modify the path if necessary
 
 data_malaria <- select(data, sir, HFP, Coca, Forest, Mining, Fire, Deforest, Misery)
 
@@ -22,7 +31,6 @@ data_malaria$Mining <- zscore(data_malaria$Mining, na.rm = TRUE)
 data_malaria$Fire <- zscore(data_malaria$Fire, na.rm = TRUE)
 data_malaria$Deforest <- zscore(data_malaria$Deforest, na.rm = TRUE)
 data_malaria$Misery <- zscore(data_malaria$Misery, na.rm = TRUE)
-
 
 #DAG 
 dag <- dagitty('dag {
@@ -49,8 +57,6 @@ Fire -> sir
 Misery -> HFP
 Misery -> sir
 
-
-
 Forest -> Deforest
 Forest -> Fire
 Forest -> Coca
@@ -75,12 +81,8 @@ Mining -> Forest
 
 HFP -> sir
 
-
 }')  
-
-
 plot(dag)
-
 
 #check whether any correlations are perfect (i.e., collinearity)
 myCov <- cov(data_malaria)
@@ -96,22 +98,16 @@ det(myCov) < 0
 #or
 any(eigen(myCov)$values < 0)
 
-
 #cond. independences
 impliedConditionalIndependencies(dag)
 corr <- lavCor(data_malaria)
-
 
 summary(corr)
 
 #plot
 localTests(dag, sample.cov=corr, sample.nobs=nrow(data_malaria))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_malaria)), xlim=c(-1,1))
-
-
-
-
-
+# Notice there is not conditional independences 
 
 #identification
 simple_dag <- dagify(
@@ -129,21 +125,12 @@ simple_dag <- dagify(
                 y = c(HFP=1.8, sir=1, Forest=3.5, Coca=2.0, Mining=2.2, Fire=3.3, Deforest=3.2, Misery=2.5))
     )
 
-
-
 # theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
 ggdag(simple_dag) + 
   theme_dag()
 
 ggdag_status(simple_dag) +
   theme_dag()
-
-
-#paths
-#paths(simple_dag)
-
-#ggdag_paths(simple_dag) +
-#  theme_dag()
 
 #adjusting
 adjustmentSets(simple_dag,  type = "minimal")
@@ -155,7 +142,8 @@ ggdag_adjustment_set(simple_dag, shadow = TRUE) +
 
 
 ##############################################################################
-data <- read.csv("D:/clases/UDES/artículo huella humana/data_dengue/dengue_final.csv")
+# For dengue
+data <- read.csv("D:/dengue_final.csv") # Modify the path if necessary
 
 data_dengue <- select(data, sir, HFP, Services, House, Overcrowding, Urban, Ethnic, Misery)
 
@@ -168,7 +156,6 @@ data_dengue$Overcrowding <- zscore(data_dengue$Overcrowding, na.rm = TRUE)
 data_dengue$Urban <- zscore(data_dengue$Urban, na.rm = TRUE)
 data_dengue$Ethnic <- zscore(data_dengue$Ethnic, na.rm = TRUE)
 data_dengue$Misery <- zscore(data_dengue$Misery, na.rm = TRUE)
-
 
 #DAG 
 dag <- dagitty('dag {
@@ -195,7 +182,6 @@ Urban -> sir
 Misery -> HFP
 Misery -> sir
 
-
 House -> Services
 House -> Overcrowding
 House -> Ethnic
@@ -216,13 +202,8 @@ Overcrowding -> Misery
 Overcrowding -> Urban
 
 HFP -> sir
-
-
 }')  
-
-
 plot(dag)
-
 
 #check whether any correlations are perfect (i.e., collinearity)
 myCov <- cov(data_dengue)
@@ -238,22 +219,16 @@ det(myCov) < 0
 #or
 any(eigen(myCov)$values < 0)
 
-
 #cond. independences
 impliedConditionalIndependencies(dag)
 corr <- lavCor(data_dengue)
-
 
 summary(corr)
 
 #plot
 localTests(dag, sample.cov=corr, sample.nobs=nrow(data_dengue))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_dengue)), xlim=c(-1,1))
-
-
-
-
-
+#Notice there is not conditional independences
 
 #identification
 simple_dag <- dagify(
@@ -270,21 +245,12 @@ simple_dag <- dagify(
                 y = c(HFP=1.8, sir=1, House=3.5, Services=2.0, Overcrowding=2.2, Urban=3.3, Ethnic=3.2, Misery=2.5))
 )
 
-
-
 # theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
 ggdag(simple_dag) + 
   theme_dag()
 
 ggdag_status(simple_dag) +
   theme_dag()
-
-
-#paths
-#paths(simple_dag)
-
-#ggdag_paths(simple_dag) +
-#  theme_dag()
 
 #adjusting
 adjustmentSets(simple_dag,  type = "minimal")
@@ -294,15 +260,9 @@ ggdag_adjustment_set(simple_dag, shadow = TRUE) +
   theme_dag()
 
 
-
-
-
-
-
-
-
 ##############################################################################
-data <- read.csv("D:/clases/UDES/artículo huella humana/data_visceral/visceral_final.csv")
+# For visceral leishmaniasis
+data <- read.csv("D:/visceral_final.csv") # Modify the path if necessary
 
 data_visceral <- select(data, sir, HFP, Coca, Forest, Mining, Fire, Deforest, rMisery,
                         Services, House, Overcrowding, Urban, Ethnic, uMisery)
@@ -325,8 +285,6 @@ data_visceral$Urban <- zscore(data_visceral$Urban, na.rm = TRUE)
 data_visceral$Ethnic <- zscore(data_visceral$Ethnic, na.rm = TRUE)
 data_visceral$uMisery <- zscore(data_visceral$uMisery, na.rm = TRUE)
 
-
-
 #DAG 
 dag <- dagitty('dag {
 sir [pos="0, 0.5"]
@@ -344,7 +302,6 @@ Services [pos="-0.9, 1.8"]
 Overcrowding [pos="-1.3, -1.7"]
 uMisery [pos="-1.5, 1.8"]
 Urban [pos="-1.8, -1.70"]
-
 
 Forest -> HFP
 Forest -> sir
@@ -428,11 +385,7 @@ Overcrowding -> uMisery
 Overcrowding -> Urban
 
 HFP -> sir
-
-
 }')  
-
-
 plot(dag)
 
 #check whether any correlations are perfect (i.e., collinearity)
@@ -449,22 +402,16 @@ det(myCov) < 0
 #or
 any(eigen(myCov)$values < 0)
 
-
 #cond. independences
 impliedConditionalIndependencies(dag)
 corr <- lavCor(data_visceral)
-
 
 summary(corr)
 
 #plot
 localTests(dag, sample.cov=corr, sample.nobs=nrow(data_visceral))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_visceral)), xlim=c(-1,1))
-
-
-
-
-
+#Notice there is not conditional independences
 
 #identification
 simple_dag <- dagify(
@@ -489,21 +436,12 @@ simple_dag <- dagify(
                       Forest=4.0, Coca=2.5, Mining=2.8, Fire=3.8, Deforest=3.7, rMisery=3.0))
 )
 
-
-
 # theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
 ggdag(simple_dag) + 
   theme_dag()
 
 ggdag_status(simple_dag) +
   theme_dag()
-
-
-#paths
-#paths(simple_dag)
-
-#ggdag_paths(simple_dag) +
-#  theme_dag()
 
 #adjusting
 adjustmentSets(simple_dag,  type = "minimal")
