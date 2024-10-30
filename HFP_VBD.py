@@ -1,7 +1,6 @@
 
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 25 19:04:08 2021
 
 @author: juand
 """
@@ -10,8 +9,8 @@ Created on Thu Nov 25 19:04:08 2021
 ###############################################################################
 # Code for the paper:
 #   "Anthropogenic Landscapes and Vector-Borne Disease Dynamics: Unveiling the Comple
-#    Interplay between Human Footprint and Disease Transmission in Colombia?" Gutiérrez, Quintero-García, Xiao, Cuadros
-#    Last modification = 19/08/2024
+#    Interplay between Human Footprint and Disease Transmission in Colombia" Juan D. Gutiérrez, Wendy L. Quintero-García, Yanyu Xiao, F. DeWolfe Miller, Diego F. Cuadros
+#    Last modification = 30/10/2024
 #    e-mail = juandavidgutier@gmail.com, jdgutierrez@udes.edu.co
 ###############################################################################
 
