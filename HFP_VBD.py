@@ -486,7 +486,7 @@ random_malaria = model_malaria.refute_estimate(
     estimate_malaria,
     method_name="random_common_cause",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(random_malaria)
 
@@ -496,7 +496,7 @@ subset_malaria = model_malaria.refute_estimate(
     subset_fraction=0.1,
     method_name="data_subset_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(subset_malaria)
 
@@ -505,7 +505,7 @@ dummy_malaria_results = model_malaria.refute_estimate(
         estimate_malaria,
         method_name="dummy_outcome_refuter",
         random_state=123,
-        num_simulations=10
+        num_simulations=50
     )
 print(dummy_malaria_results[0])
 
@@ -515,7 +515,7 @@ placebo_malaria = model_malaria.refute_estimate(
     estimate_malaria,
     method_name="placebo_treatment_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(placebo_malaria)
 
@@ -934,7 +934,7 @@ random_dengue = model_dengue.refute_estimate(
     estimate_dengue,
     method_name="random_common_cause",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(random_dengue)
 
@@ -944,7 +944,7 @@ subset_dengue = model_dengue.refute_estimate(
     subset_fraction=0.1,
     method_name="data_subset_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(subset_dengue)
 
@@ -953,7 +953,7 @@ dummy_dengue_results = model_dengue.refute_estimate(
         estimate_dengue,
         method_name="dummy_outcome_refuter",
         random_state=123,
-        num_simulations=10
+        num_simulations=50
     )
 print(dummy_dengue_results[0])
 
@@ -963,7 +963,7 @@ placebo_dengue = model_dengue.refute_estimate(
     estimate_dengue,
     method_name="placebo_treatment_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(placebo_dengue)
 
@@ -1420,7 +1420,7 @@ random_visceral = model_visceral.refute_estimate(
     estimate_visceral,
     method_name="random_common_cause",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(random_visceral)
 
@@ -1430,7 +1430,7 @@ subset_visceral = model_visceral.refute_estimate(
     subset_fraction=0.1,
     method_name="data_subset_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(subset_visceral)
 
@@ -1439,7 +1439,7 @@ dummy_visceral_results = model_visceral.refute_estimate(
         estimate_visceral,
         method_name="dummy_outcome_refuter",
         random_state=123,
-        num_simulations=10
+        num_simulations=50
     )
 print(dummy_visceral_results[0])
 
@@ -1449,7 +1449,7 @@ placebo_visceral = model_visceral.refute_estimate(
     estimate_visceral,
     method_name="placebo_treatment_refuter",
     random_state=123,
-    num_simulations=10,
+    num_simulations=50,
     )
 print(placebo_visceral)
 
