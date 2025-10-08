@@ -20,10 +20,10 @@ library(MKdescr)
 # For malaria
 data <- read.csv("D:/malaria_final.csv") # Modify the path if necessary
 
-data_malaria <- select(data, sir, HFP, Coca, Forest, Mining, Fire, Deforest, Misery)
+data_malaria <- select(data, excess, HFP, Coca, Forest, Mining, Fire, Deforest, Misery, rainfall, temperature)
 
 #sd units
-data_malaria$sir <- zscore(data_malaria$sir, na.rm = TRUE)
+data_malaria$excess <- zscore(data_malaria$excess, na.rm = TRUE)
 data_malaria$HFP <- zscore(data_malaria$HFP, na.rm = TRUE)
 data_malaria$Coca <- zscore(data_malaria$Coca, na.rm = TRUE)
 data_malaria$Forest <- zscore(data_malaria$Forest, na.rm = TRUE)
@@ -34,54 +34,72 @@ data_malaria$Misery <- zscore(data_malaria$Misery, na.rm = TRUE)
 
 #DAG 
 dag <- dagitty('dag {
-sir [pos="0, 0.5"]
+excess [pos="0, 0.5"]
 HFP  [pos="-0.2, 0.5"]
 
 Forest [pos="-1.6, 1.1"]
 Deforest [pos="-0.20, -0.40"]
 Coca [pos="-0.30, 1.2"]
 Mining [pos="-1.1, -1.4"]
-Misery [pos="-1.1, 1.30"]
 Fire [pos="-1.4, -0.90"]
+rainfall [pos="-2.4, 1.6"]
+temperature [pos="-2.0, 1.6"]
+uMisery [pos="-2.0, -1.6"]
+rMisery [pos="-2.0, -2.0"]
 
-Forest -> HFP
-Forest -> sir
-Deforest -> HFP
-Deforest -> sir
-Coca -> HFP
-Coca -> sir
-Mining -> HFP
-Mining -> sir
-Fire -> HFP
-Fire -> sir
-Misery -> HFP
-Misery -> sir
+rainfall -> temperature
+rainfall -> Forest
+temperature -> Forest
+rainfall -> HFP
+temperature -> HFP
+rainfall -> excess
+temperature -> excess
+                    
+
+Forest -> HFP    
+Forest -> excess
+
 
 Forest -> Deforest
-Forest -> Fire
+rMisery -> Deforest
+uMisery -> Deforest
+Deforest -> HFP
+Deforest -> excess
+                    
+
 Forest -> Coca
-Forest -> Misery
+rMisery -> Coca
+uMisery -> Coca
+Coca -> HFP
+Coca -> excess
 
+
+Forest -> Mining
+rMisery -> Mining
+uMisery -> Mining
+Mining -> HFP
+Mining -> excess
+                    
+
+Forest -> Fire
 Deforest -> Fire
-Deforest -> Coca
-Deforest -> Forest
-
-Fire -> Mining
-
 Coca -> Fire
-Coca -> Mining
+rMisery -> Fire
+uMisery -> Fire
+Fire -> HFP
+Fire -> excess
+    
 
-Misery -> Deforest
-Misery -> Fire
-Misery -> Coca
-Misery -> Mining
+rMisery -> HFP
+rMisery -> excess
+uMisery -> HFP
+uMisery -> excess
 
-Mining -> Deforest
-Mining -> Forest
 
-HFP -> sir
+HFP -> excess
 
 }')  
+
 plot(dag)
 
 #check whether any correlations are perfect (i.e., collinearity)
@@ -109,46 +127,16 @@ localTests(dag, sample.cov=corr, sample.nobs=nrow(data_malaria))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_malaria)), xlim=c(-1,1))
 # Notice there is not conditional independences 
 
-#identification
-simple_dag <- dagify(
-  sir ~  HFP + Coca + Forest + Mining + Fire +  Deforest + Misery,
-  HFP ~ Coca + Forest + Mining + Fire + Deforest + Misery, 
-  Coca ~ Forest + Deforest + Misery, 
-  Forest ~ Mining + Deforest,
-  Mining ~ Misery + Coca + Fire,
-  Fire ~ Forest + Deforest +  Misery + Coca,
-  Deforest ~ Forest + Misery + Mining,
-  Misery ~ Forest,
-  exposure = "HFP",
-  outcome = "sir",
-  coords = list(x = c(HFP=2, sir=2, Forest=3.5, Coca=-1.12, Mining=3.2, Fire=-1.0, Deforest=1.2, Misery=-0.8),
-                y = c(HFP=1.8, sir=1, Forest=3.5, Coca=2.0, Mining=2.2, Fire=3.3, Deforest=3.2, Misery=2.5))
-    )
-
-# theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
-ggdag(simple_dag) + 
-  theme_dag()
-
-ggdag_status(simple_dag) +
-  theme_dag()
-
-#adjusting
-adjustmentSets(simple_dag,  type = "minimal")
-## {z_miseria, indixes}
-
-ggdag_adjustment_set(simple_dag, shadow = TRUE) +
-  theme_dag()
-
 
 
 ##############################################################################
 # For dengue
 data <- read.csv("D:/dengue_final.csv") # Modify the path if necessary
 
-data_dengue <- select(data, sir, HFP, Services, House, Overcrowding, Urban, Ethnic, Misery)
+data_dengue <- select(data, excess, HFP, Services, House, Overcrowding, Urban, Ethnic, Misery, rainfall, temperature)
 
 #sd units
-data_dengue$sir <- zscore(data_dengue$sir, na.rm = TRUE)
+data_dengue$excess <- zscore(data_dengue$excess, na.rm = TRUE)
 data_dengue$HFP <- zscore(data_dengue$HFP, na.rm = TRUE)
 data_dengue$Services <- zscore(data_dengue$Services, na.rm = TRUE)
 data_dengue$House <- zscore(data_dengue$House, na.rm = TRUE)
@@ -159,7 +147,7 @@ data_dengue$Misery <- zscore(data_dengue$Misery, na.rm = TRUE)
 
 #DAG 
 dag <- dagitty('dag {
-sir [pos="0, 0.5"]
+excess [pos="0, 0.5"]
 HFP  [pos="-0.2, 0.5"]
 
 House [pos="-1.6, 1.1"]
@@ -168,19 +156,27 @@ Services [pos="-0.30, 1.2"]
 Overcrowding [pos="-1.1, -1.4"]
 Misery [pos="-1.1, 1.30"]
 Urban [pos="-1.4, -0.90"]
+rainfall [pos="-2.4, 1.6"]
+temperature [pos="-2.0, 1.6"]
+
+rainfall -> temperature
+rainfall -> HFP
+temperature -> HFP
+rainfall -> excess
+temperature -> excess
 
 House -> HFP
-House -> sir
+House -> excess
 Ethnic -> HFP
-Ethnic -> sir
+Ethnic -> excess
 Services -> HFP
-Services -> sir
+Services -> excess
 Overcrowding -> HFP
-Overcrowding -> sir
+Overcrowding -> excess
 Urban -> HFP
-Urban -> sir
+Urban -> excess
 Misery -> HFP
-Misery -> sir
+Misery -> excess
 
 House -> Services
 House -> Overcrowding
@@ -201,7 +197,7 @@ Services -> Misery
 Overcrowding -> Misery
 Overcrowding -> Urban
 
-HFP -> sir
+HFP -> excess
 }')  
 plot(dag)
 
@@ -230,45 +226,17 @@ localTests(dag, sample.cov=corr, sample.nobs=nrow(data_dengue))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_dengue)), xlim=c(-1,1))
 #Notice there is not conditional independences
 
-#identification
-simple_dag <- dagify(
-  sir ~  HFP + Services + House + Overcrowding + Urban +  Ethnic + Misery,
-  HFP ~ Services + House + Overcrowding + Urban + Ethnic + Misery, 
-  Services ~ House + Ethnic + Urban, 
-  Misery ~ House + Services + Ethnic + Overcrowding + Urban,
-  Overcrowding ~  House  + Urban,
-  Urban ~ House + Ethnic +  Misery + Services,
-  Ethnic ~ House,
-  exposure = "HFP",
-  outcome = "sir",
-  coords = list(x = c(HFP=2, sir=2, House=3.5, Services=-1.12, Overcrowding=3.2, Urban=-1.0, Ethnic=1.2, Misery=-0.8),
-                y = c(HFP=1.8, sir=1, House=3.5, Services=2.0, Overcrowding=2.2, Urban=3.3, Ethnic=3.2, Misery=2.5))
-)
-
-# theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
-ggdag(simple_dag) + 
-  theme_dag()
-
-ggdag_status(simple_dag) +
-  theme_dag()
-
-#adjusting
-adjustmentSets(simple_dag,  type = "minimal")
-## {z_miseria, indixes}
-
-ggdag_adjustment_set(simple_dag, shadow = TRUE) +
-  theme_dag()
 
 
 ##############################################################################
 # For visceral leishmaniasis
 data <- read.csv("D:/visceral_final.csv") # Modify the path if necessary
 
-data_visceral <- select(data, sir, HFP, Coca, Forest, Mining, Fire, Deforest, rMisery,
-                        Services, House, Overcrowding, Urban, Ethnic, uMisery)
+data_visceral <- select(data, excess, HFP, Coca, Forest, Mining, Fire, Deforest, rMisery,
+                        Services, House, Overcrowding, Urban, Ethnic, uMisery, rainfall, temperature)
 
 #sd units
-data_visceral$sir <- zscore(data_visceral$sir, na.rm = TRUE)
+data_visceral$excess <- zscore(data_visceral$excess, na.rm = TRUE)
 data_visceral$HFP <- zscore(data_visceral$HFP, na.rm = TRUE)
 data_visceral$Coca <- zscore(data_visceral$Coca, na.rm = TRUE)
 data_visceral$Forest <- zscore(data_visceral$Forest, na.rm = TRUE)
@@ -276,7 +244,7 @@ data_visceral$Mining <- zscore(data_visceral$Mining, na.rm = TRUE)
 data_visceral$Fire <- zscore(data_visceral$Fire, na.rm = TRUE)
 data_visceral$Deforest <- zscore(data_visceral$Deforest, na.rm = TRUE)
 data_visceral$rMisery <- zscore(data_visceral$rMisery, na.rm = TRUE)
-data_visceral$sir <- zscore(data_visceral$sir, na.rm = TRUE)
+data_visceral$excess <- zscore(data_visceral$excess, na.rm = TRUE)
 data_visceral$HFP <- zscore(data_visceral$HFP, na.rm = TRUE)
 data_visceral$Services <- zscore(data_visceral$Services, na.rm = TRUE)
 data_visceral$House <- zscore(data_visceral$House, na.rm = TRUE)
@@ -287,7 +255,7 @@ data_visceral$uMisery <- zscore(data_visceral$uMisery, na.rm = TRUE)
 
 #DAG 
 dag <- dagitty('dag {
-sir [pos="0, 0.5"]
+excess [pos="0, 0.5"]
 HFP  [pos="-0.2, 0.5"]
 
 Forest [pos="-1.6, 1.1"]
@@ -296,25 +264,35 @@ Coca [pos="-0.30, 1.2"]
 Mining [pos="-1.1, -1.4"]
 rMisery [pos="-1.1, 1.30"]
 Fire [pos="-1.4, -0.90"]
-House [pos="-2.6, 2.1"]
+House [pos="-1.8, 2.1"]
 Ethnic [pos="-0.4, -0.40"]
 Services [pos="-0.9, 1.8"]
 Overcrowding [pos="-1.3, -1.7"]
 uMisery [pos="-1.5, 1.8"]
 Urban [pos="-1.8, -1.70"]
+rainfall [pos="-2.4, 1.6"]
+temperature [pos="-2.0, 1.6"]
+
+rainfall -> temperature
+rainfall -> Forest
+temperature -> Forest
+rainfall -> HFP
+temperature -> HFP
+rainfall -> excess
+temperature -> excess
 
 Forest -> HFP
-Forest -> sir
+Forest -> excess
 Deforest -> HFP
-Deforest -> sir
+Deforest -> excess
 Coca -> HFP
-Coca -> sir
+Coca -> excess
 Mining -> HFP
-Mining -> sir
+Mining -> excess
 Fire -> HFP
-Fire -> sir
+Fire -> excess
 rMisery -> HFP
-rMisery -> sir
+rMisery -> excess
 
 Forest -> Deforest
 Forest -> Fire
@@ -352,17 +330,17 @@ Deforest -> uMisery
 Mining -> uMisery
 
 House -> HFP
-House -> sir
+House -> excess
 Ethnic -> HFP
-Ethnic -> sir
+Ethnic -> excess
 Services -> HFP
-Services -> sir
+Services -> excess
 Overcrowding -> HFP
-Overcrowding -> sir
+Overcrowding -> excess
 Urban -> HFP
-Urban -> sir
+Urban -> excess
 uMisery -> HFP
-uMisery -> sir
+uMisery -> excess
 
 House -> Services
 House -> Overcrowding
@@ -384,7 +362,7 @@ Services -> uMisery
 Overcrowding -> uMisery
 Overcrowding -> Urban
 
-HFP -> sir
+HFP -> excess
 }')  
 plot(dag)
 
@@ -412,46 +390,4 @@ summary(corr)
 localTests(dag, sample.cov=corr, sample.nobs=nrow(data_visceral))
 plotLocalTestResults(localTests(dag, sample.cov=corr, sample.nobs=nrow(data_visceral)), xlim=c(-1,1))
 #Notice there is not conditional independences
-
-#identification
-simple_dag <- dagify(
-  sir ~  HFP + Services + House + Overcrowding + Urban +  Ethnic + uMisery + Coca + Forest + Mining + Fire +  Deforest + rMisery,
-  HFP ~ Services + House + Overcrowding + Urban +  Ethnic + uMisery + Coca + Forest + Mining + Fire +  Deforest + rMisery, 
-  Services ~ House + Ethnic + Urban + rMisery + Mining, 
-  uMisery ~ House + Services + Ethnic + Overcrowding + Urban + Deforest + rMisery + Coca + Fire + Mining,
-  Overcrowding ~  House  + Urban,
-  Urban ~ House + Ethnic +  uMisery + Services + Mining,
-  Ethnic ~ House + rMisery,
-  Coca ~ Forest + Deforest + rMisery + Overcrowding, 
-  Forest ~ Mining + Ethnic + Deforest,
-  Mining ~ rMisery + Coca + Fire,
-  Fire ~ Forest + Deforest +  rMisery + Coca,
-  Deforest ~ Forest + rMisery + Mining,
-  rMisery ~ Forest + Ethnic,
-  exposure = "HFP",
-  outcome = "sir",
-  coords = list(x = c(HFP=2, sir=2, House=3.5, Services=-1.12, Overcrowding=3.2, Urban=-1.0, Ethnic=1.2, uMisery=-0.8,
-                      Forest=4.0, Coca=-1.62, Mining=3.7, Fire=-1.5, Deforest=1.7, rMisery=-1.3),
-                y = c(HFP=1.8, sir=1, House=3.5, Services=2.0, Overcrowding=2.2, Urban=3.3, Ethnic=3.2, uMisery=2.5,
-                      Forest=4.0, Coca=2.5, Mining=2.8, Fire=3.8, Deforest=3.7, rMisery=3.0))
-)
-
-# theme_dag() coloca la trama en un fondo blanco sin etiquetas en los ejes
-ggdag(simple_dag) + 
-  theme_dag()
-
-ggdag_status(simple_dag) +
-  theme_dag()
-
-#adjusting
-adjustmentSets(simple_dag,  type = "minimal")
-## {z_miseria, indixes}
-
-ggdag_adjustment_set(simple_dag, shadow = TRUE) +
-  theme_dag()
-
-
-
-
-
 
