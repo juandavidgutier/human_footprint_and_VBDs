@@ -391,22 +391,22 @@ plot_cate(X, col_idx=3, estimator=estimator,
 #%%
 #with random
 random_malaira = model_malaria.refute_estimate(identified_estimand_malaria, causal_estimate_malaria,
-                                         method_name="random_common_cause", random_state=123, num_simulations=10)
+                                         method_name="random_common_cause", random_state=123, num_simulations=50)
 print(random_malaira)
 
 #with subset
 subset_malaira  = model_malaria.refute_estimate(identified_estimand_malaria, causal_estimate_malaria,
-                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=10)
+                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=50)
 print(subset_malaira)
 
 #with bootstrap
 bootstrap_malaira  = model_malaria.refute_estimate(identified_estimand_malaria, causal_estimate_malaria,
-                                             method_name="bootstrap_refuter", random_state=123, num_simulations=10)
+                                             method_name="bootstrap_refuter", random_state=123, num_simulations=50)
 print(bootstrap_malaira)
 
 #with placebo
 placebo_malaira  = model_malaria.refute_estimate(identified_estimand_malaria, causal_estimate_malaria,
-                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=10)
+                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=50)
 print(placebo_malaira)
 
 
@@ -436,7 +436,7 @@ partialR2_malaria = model_malaria.refute_estimate(
     effect_fraction_on_treatment=0.1,
     effect_fraction_on_outcome=0.1,
     plugin_reisz=True,
-    num_simulations=100,
+    num_simulations=500,
     plot_estimate=False
 )
 
@@ -842,22 +842,22 @@ plot_cate(X, col_idx=3, estimator=estimator,
 #%%
 #with random
 random_dengue = model_dengue.refute_estimate(identified_estimand_dengue, causal_estimate_dengue,
-                                         method_name="random_common_cause", random_state=123, num_simulations=10)
+                                         method_name="random_common_cause", random_state=123, num_simulations=50)
 print(random_dengue)
 
 #with subset
 subset_dengue  = model_dengue.refute_estimate(identified_estimand_dengue, causal_estimate_dengue,
-                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=10)
+                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=50)
 print(subset_dengue)
 
 #with bootstrap
 bootstrap_dengue  = model_dengue.refute_estimate(identified_estimand_dengue, causal_estimate_dengue,
-                                             method_name="bootstrap_refuter", random_state=123, num_simulations=10)
+                                             method_name="bootstrap_refuter", random_state=123, num_simulations=50)
 print(bootstrap_dengue)
 
 #with placebo
 placebo_dengue  = model_dengue.refute_estimate(identified_estimand_dengue, causal_estimate_dengue,
-                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=10)
+                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=50)
 print(placebo_dengue)
 
 
@@ -1232,22 +1232,22 @@ plot_cate(X, col_idx=3, estimator=estimator,
 #%%
 #with random
 random_visceral = model_visceral.refute_estimate(identified_estimand_visceral, causal_estimate_visceral,
-                                         method_name="random_common_cause", random_state=123, num_simulations=10)
+                                         method_name="random_common_cause", random_state=123, num_simulations=50)
 print(random_visceral)
 
 #with subset
 subset_visceral  = model_visceral.refute_estimate(identified_estimand_visceral, causal_estimate_visceral,
-                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=10)
+                                          method_name="data_subset_refuter", subset_fraction=0.1, random_state=123, num_simulations=50)
 print(subset_visceral)
 
 #with bootstrap
 bootstrap_visceral  = model_visceral.refute_estimate(identified_estimand_visceral, causal_estimate_visceral,
-                                             method_name="bootstrap_refuter", random_state=123, num_simulations=10)
+                                             method_name="bootstrap_refuter", random_state=123, num_simulations=50)
 print(bootstrap_visceral)
 
 #with placebo
 placebo_visceral  = model_visceral.refute_estimate(identified_estimand_visceral, causal_estimate_visceral,
-                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=10)
+                                           method_name="placebo_treatment_refuter", placebo_type="permute", random_state=123, num_simulations=50)
 print(placebo_visceral)
 
 
